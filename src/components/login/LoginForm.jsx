@@ -2,15 +2,18 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import styles from "./AuthForm.module.css";
 
-function Login() {
+function Login({ fetchUserData }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const api = axios.create({
     baseURL: "https://localhost:44364/",
   });
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,19 +22,19 @@ function Login() {
       password: password,
     };
 
-    console.log("user created");
     try {
       const response = await api.post("api/Auth/Login", user);
-      const token = response.data;
-      localStorage.setItem("token", token);
+      localStorage.setItem("jwt", response.data.authToken);
+      fetchUserData(response.data.authToken);
+      navigate("/courses");
     } catch (error) {
-      console.error("Login failed : ", error.response.data);
+      console.error("Login failed : ", error.response);
     }
   };
 
   return (
-    <div className="form-auth">
-      <Form onSubmit={handleLogin}>
+    <div className={styles["auth-container"]}>
+      <Form className={styles["form-auth"]} onSubmit={handleLogin}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control

@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import styles from "../login/AuthForm.module.css";
 
 function BasicExample() {
   const [role, setRole] = useState(0);
@@ -44,100 +45,102 @@ function BasicExample() {
     }
   };
   return (
-    <Form className="form-auth" onSubmit={handleFormSubmit}>
-      <Form.Group className="mb-3" controlId="formBasicName">
-        <Form.Label>First Name</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter first name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          required
-        />
-      </Form.Group>
+    <div className={styles["auth-container"]}>
+      <Form className={styles["form-auth"]} onSubmit={handleFormSubmit}>
+        <Form.Group className="mb-3" controlId="formBasicName">
+          <Form.Label>First Name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter first name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+          />
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicLastName">
-        <Form.Label>Last name</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter last name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          required
-        />
-      </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicLastName">
+          <Form.Label>Last name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter last name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control
-          type="email"
-          placeholder="Enter email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <Form.Text className="text-muted">
+            We'll never share your email with anyone else.
+          </Form.Text>
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error !== null && (
-          <Form.Text className="text-danger">Passwords must match</Form.Text>
-        )}
-      </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          {error !== null && (
+            <Form.Text className="text-danger">Passwords must match</Form.Text>
+          )}
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicReTypePassword">
-        <Form.Label>Retype Password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Password"
-          value={retypePassword}
-          onChange={(e) => setRetypePassword(e.target.value)}
-          required
-        />
-        {error !== null && (
-          <Form.Text className="text-danger">Passwords must match</Form.Text>
-        )}
-      </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicReTypePassword">
+          <Form.Label>Retype Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            value={retypePassword}
+            onChange={(e) => setRetypePassword(e.target.value)}
+            required
+          />
+          {error !== null && (
+            <Form.Text className="text-danger">Passwords must match</Form.Text>
+          )}
+        </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Label>Role</Form.Label>
-        {["radio"].map((type) => (
-          <div key={`inline-${type}`} className="mb-3">
-            <Form.Check
-              inline
-              label="Learner"
-              name="group1"
-              type={type}
-              id={`inline-${type}-1`}
-              checked={role === 0}
-              onChange={() => setRole(0)}
-            />
-            <Form.Check
-              inline
-              label="Instructor"
-              name="group1"
-              type={type}
-              id={`inline-${type}-2`}
-              checked={role === 1}
-              onChange={() => setRole(1)}
-            />
-          </div>
-        ))}
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+        <Form.Group className="mb-3">
+          <Form.Label>Role</Form.Label>
+          {["radio"].map((type) => (
+            <div key={`inline-${type}`} className="mb-3">
+              <Form.Check
+                inline
+                label="Learner"
+                name="group1"
+                type={type}
+                id={`inline-${type}-1`}
+                checked={role === 0}
+                onChange={() => setRole(0)}
+              />
+              <Form.Check
+                inline
+                label="Instructor"
+                name="group1"
+                type={type}
+                id={`inline-${type}-2`}
+                checked={role === 1}
+                onChange={() => setRole(1)}
+              />
+            </div>
+          ))}
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
+    </div>
   );
 }
 
