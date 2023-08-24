@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
 import api, { baseApiUrl } from "../../api";
-import { CardGroup, Col, Container, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Col, Container, Row } from "react-bootstrap";
 import CourseCard from "./CourseCard";
 
 export default function CourseList() {
   const [courses, setCourses] = useState(null);
 
-  const navigate = useNavigate();
   useEffect(() => {
     const fetchCourses = async () => {
       try {

@@ -26,14 +26,14 @@ function Navigation({ user, setUser }) {
             <Nav.Link
               as={Link}
               className={styles["nav-link"]}
-              to={`/courses/details/${null}`}
+              to={`/course/${null}`}
             >
               Create Course
             </Nav.Link>
             <Nav.Link
               as={Link}
               className={styles["nav-link"]}
-              to="/courses/list"
+              to="/course/list"
             >
               Courses
             </Nav.Link>

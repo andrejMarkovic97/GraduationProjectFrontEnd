@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import api from "../../api";
-import { Button } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import LeftSideNavigation from "../leftsidenavigation/LeftSideNavigation";
 
-export default function DetailsCourseForm() {
+export default function DetailsCourseForm({ courseId }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
@@ -13,8 +14,6 @@ export default function DetailsCourseForm() {
   const [selectedTopic, setSelectedTopic] = useState(null);
 
   const navigate = useNavigate();
-
-  const { courseId } = useParams();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -32,7 +31,6 @@ export default function DetailsCourseForm() {
     const fetchCourseData = async (courseId) => {
       try {
         const response = await api.get(`/api/Course/${courseId}`);
-        console.log(response);
         setName(response.data.name);
         setDescription(response.data.description);
         setSelectedCategory(response.data.categoryId);
@@ -99,103 +97,105 @@ export default function DetailsCourseForm() {
   };
 
   return (
-    <div className="form">
-      <div className="form-container">
-        <Form onSubmit={handleSubmit}>
-          <Form.Group
-            className="form-group mb-3"
-            controlId="detailsCourseForm.Name"
-          >
-            <Form.Label className="form-label">Name</Form.Label>
-            <Form.Control
-              className="form-input"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group
-            className="form-group mb-3"
-            controlId="detailsCourseForm.Description"
-          >
-            <Form.Label className="form-label">Description</Form.Label>
-            <Form.Control
-              className="form-input"
-              as="textarea"
-              rows={5}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group
-            controlId="detailsCourseForm.Image"
-            className="form-group mb-3"
-          >
-            <Form.Label className="form-label">Course Logo</Form.Label>
-            <Form.Control
-              className="form-input"
-              type="file"
-              accept="image/png, image/jpeg"
-              onChange={handleImageChange}
-            />
-          </Form.Group>
-          {categories && (
-            <>
-              <Form.Group
-                controlId="detailsCourseForm.CategoryDropdown"
-                className="form-group mb-3"
-              >
-                <Form.Label className="form-label">Category</Form.Label>
-                <Form.Select
-                  aria-label="Category list"
-                  value={
-                    selectedCategory
-                      ? selectedCategory.categoryId
-                      : categories[0].categoryId
-                  }
-                  onChange={(e) => handleSelectCategory(e.target.value)}
+    <>
+      <div className="form">
+        <div className="form-container">
+          <Form onSubmit={handleSubmit}>
+            <Form.Group
+              className="form-group mb-3"
+              controlId="detailsCourseForm.Name"
+            >
+              <Form.Label className="form-label">Name</Form.Label>
+              <Form.Control
+                className="form-input"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group
+              className="form-group mb-3"
+              controlId="detailsCourseForm.Description"
+            >
+              <Form.Label className="form-label">Description</Form.Label>
+              <Form.Control
+                className="form-input"
+                as="textarea"
+                rows={5}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group
+              controlId="detailsCourseForm.Image"
+              className="form-group mb-3"
+            >
+              <Form.Label className="form-label">Course Logo</Form.Label>
+              <Form.Control
+                className="form-input"
+                type="file"
+                accept="image/png, image/jpeg"
+                onChange={handleImageChange}
+              />
+            </Form.Group>
+            {categories && (
+              <>
+                <Form.Group
+                  controlId="detailsCourseForm.CategoryDropdown"
+                  className="form-group mb-3"
                 >
-                  {categories?.map((category) => (
-                    <option
-                      key={category.categoryId}
-                      value={category.categoryId}
-                    >
-                      {category.categoryName}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+                  <Form.Label className="form-label">Category</Form.Label>
+                  <Form.Select
+                    aria-label="Category list"
+                    value={
+                      selectedCategory
+                        ? selectedCategory.categoryId
+                        : categories[0].categoryId
+                    }
+                    onChange={(e) => handleSelectCategory(e.target.value)}
+                  >
+                    {categories?.map((category) => (
+                      <option
+                        key={category.categoryId}
+                        value={category.categoryId}
+                      >
+                        {category.categoryName}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
 
-              <Form.Group
-                controlId="detailsCourseForm.TopicDropdown"
-                className="mb-3"
-              >
-                <Form.Label>Topic</Form.Label>
-                <Form.Select
-                  aria-label="Topic list"
-                  value={
-                    selectedTopic
-                      ? selectedTopic.topicId
-                      : categories[0].topics[0]
-                  }
-                  onChange={(e) => setSelectedTopic(e.target.value)}
+                <Form.Group
+                  controlId="detailsCourseForm.TopicDropdown"
+                  className="mb-3"
                 >
-                  {selectedCategory?.topics?.map((topic) => (
-                    <option key={topic.topicId} value={topic.topicId}>
-                      {topic.topicName}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </>
-          )}
+                  <Form.Label>Topic</Form.Label>
+                  <Form.Select
+                    aria-label="Topic list"
+                    value={
+                      selectedTopic
+                        ? selectedTopic.topicId
+                        : categories[0].topics[0]
+                    }
+                    onChange={(e) => setSelectedTopic(e.target.value)}
+                  >
+                    {selectedCategory?.topics?.map((topic) => (
+                      <option key={topic.topicId} value={topic.topicId}>
+                        {topic.topicName}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </>
+            )}
 
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-          {courseId && <Button variant="danger">Delete</Button>}
-        </Form>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+            {courseId && <Button variant="danger">Delete</Button>}
+          </Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,5 +1,6 @@
 import styles from "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginForm from "./components/login/LoginForm";
 import RegisterForm from "./components/register/RegisterForm";
@@ -8,9 +9,11 @@ import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import DetailsCourseForm from "./components/course/DetailsCourseForm";
+import CourseDashboard from "./components/course/CourseDashboard";
+import { Col, Container, Row } from "react-bootstrap";
 function App() {
   const [user, setUser] = useState(null);
+  const [section, setSection] = useState(null);
 
   useEffect(() => {
     let jwt = localStorage.getItem("jwt");
@@ -39,19 +42,17 @@ function App() {
     <div>
       <Router>
         {user ? (
-          <div>
+          <Container fluid>
             <Navbar user={user} setUser={setUser} />
             <Routes>
-              <Route path="/courses">
-                <Route path="list" element={<CourseList />} />
-                <Route
-                  path="details/:courseId"
-                  element={<DetailsCourseForm />}
-                />
-              </Route>
+              <>
+                <Route path="/course/list" element={<CourseList />} />
+
+                <Route path="/course/:courseId" element={<CourseDashboard />} />
+              </>
             </Routes>
             <Footer />
-          </div>
+          </Container>
         ) : (
           <Routes>
             <Route
