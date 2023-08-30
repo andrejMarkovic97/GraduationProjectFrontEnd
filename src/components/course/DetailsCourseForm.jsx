@@ -5,9 +5,10 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import LeftSideNavigation from "../leftsidenavigation/LeftSideNavigation";
 
-export default function DetailsCourseForm({ courseId }) {
+export default function DetailsCourseForm() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [numberOfSessions, setNumberOfSessions] = useState(1);
   const [image, setImage] = useState("");
   const [categories, setCategories] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -15,6 +16,7 @@ export default function DetailsCourseForm({ courseId }) {
 
   const navigate = useNavigate();
 
+  const { id } = useParams();
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -28,22 +30,27 @@ export default function DetailsCourseForm({ courseId }) {
   }, []); // Remove categories from the dependency array
 
   useEffect(() => {
-    const fetchCourseData = async (courseId) => {
+    const fetchCourseData = async (id) => {
       try {
-        const response = await api.get(`/api/Course/${courseId}`);
-        setName(response.data.name);
-        setDescription(response.data.description);
-        setSelectedCategory(response.data.categoryId);
-        setSelectedTopic(response.data.topicId);
+        if (id && id !== "null") {
+          const response = await api.get(`/api/Course/${id}`);
+          if (response) {
+            setName(response.data.name);
+            setDescription(response.data.description);
+            setSelectedCategory(response.data.categoryId);
+            setSelectedTopic(response.data.topicId);
+            setNumberOfSessions(response.data.numberOfSessionsForCertificate);
+          }
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
-    if (courseId) {
-      fetchCourseData(courseId);
+    if (id) {
+      fetchCourseData(id);
     }
-  }, [courseId]);
+  }, [id]);
 
   // Separate useEffect to set the selected category
   useEffect(() => {
@@ -57,8 +64,14 @@ export default function DetailsCourseForm({ courseId }) {
         if (topic) {
           console.log(topic);
           setSelectedCategory(category);
-          setSelectedTopic(topic.topicId);
+          setSelectedTopic(topic);
         }
+      }
+    } else if (categories && categories.length > 0) {
+      const initialCategory = categories[0];
+      setSelectedCategory(initialCategory);
+      if (initialCategory.topics && initialCategory.topics.length > 0) {
+        setSelectedTopic(initialCategory.topics[0].topicId);
       }
     }
   }, [categories, selectedCategory, selectedTopic]);
@@ -79,6 +92,7 @@ export default function DetailsCourseForm({ courseId }) {
     const formData = new FormData();
     formData.append("Name", name);
     formData.append("Description", description);
+    formData.append("NumberOfSessionsForCertificate", numberOfSessions);
     formData.append("CategoryId", selectedCategory.categoryId);
     formData.append("TopicId", selectedTopic);
     formData.append("Image", image);
@@ -124,6 +138,22 @@ export default function DetailsCourseForm({ courseId }) {
                 rows={5}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group
+              className="form-group mb-3"
+              controlId="detailsCourseForm.NumberOfSessions"
+            >
+              <Form.Label className="form-label">
+                Number of sessions needed for certificate
+              </Form.Label>
+              <Form.Control
+                className="form-input"
+                type="number"
+                rows={5}
+                value={numberOfSessions}
+                onChange={(e) => setNumberOfSessions(e.target.value)}
               />
             </Form.Group>
             <Form.Group
@@ -192,7 +222,7 @@ export default function DetailsCourseForm({ courseId }) {
             <Button variant="primary" type="submit">
               Submit
             </Button>
-            {courseId && <Button variant="danger">Delete</Button>}
+            {id && <Button variant="danger">Delete</Button>}
           </Form>
         </div>
       </div>

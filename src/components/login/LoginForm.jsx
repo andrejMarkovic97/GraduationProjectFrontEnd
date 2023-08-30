@@ -26,7 +26,7 @@ function Login({ fetchUserData }) {
       const response = await api.post("api/Auth/Login", user);
       localStorage.setItem("jwt", response.data.authToken);
       fetchUserData(response.data.authToken);
-      navigate("/courses");
+      navigate("/course/list");
     } catch (error) {
       console.error("Login failed : ", error.response);
     }

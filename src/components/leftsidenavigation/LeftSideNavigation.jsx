@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CDBSidebar,
   CDBSidebarContent,
@@ -8,21 +8,13 @@ import {
   CDBSidebarMenuItem,
 } from "cdbreact";
 
-import DetailsCourseForm from "../course/DetailsCourseForm";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
+export default function LeftSideNavigation({ sections, content, main }) {
+  const { id } = useParams();
 
-export default function LeftSideNavigation({
-  sections,
-  content,
-  selectedSection,
-  setSelectedSection,
-}) {
-  const handleClick = (section) => {
-    console.log("Click : ", section);
-    setSelectedSection(section);
-  };
-
+  const currentPath = window.location.pathname;
   return (
     <>
       <Row>
@@ -44,20 +36,22 @@ export default function LeftSideNavigation({
               <CDBSidebarContent className="sidebar-content">
                 <CDBSidebarMenu>
                   {sections.map((section, index) => (
-                    <div key={index} onClick={() => handleClick(section)}>
-                      <NavLink
+                    <NavLink
+                      to={`/${main}/${section.toLowerCase()}/${id}`}
+                      key={index}
+                    >
+                      <CDBSidebarMenuItem
+                        icon="columns"
+                        style={{ fontFamily: "Roboto" }}
                         className={
-                          selectedSection === section ? "activeClicked" : ""
+                          currentPath.includes(section.toLowerCase())
+                            ? "activeSection"
+                            : ""
                         }
                       >
-                        <CDBSidebarMenuItem
-                          icon="columns"
-                          style={{ fontFamily: "Roboto" }}
-                        >
-                          {section}
-                        </CDBSidebarMenuItem>
-                      </NavLink>
-                    </div>
+                        {section}
+                      </CDBSidebarMenuItem>
+                    </NavLink>
                   ))}
                 </CDBSidebarMenu>
               </CDBSidebarContent>

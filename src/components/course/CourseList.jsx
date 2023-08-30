@@ -11,7 +11,6 @@ export default function CourseList() {
       try {
         const response = await api.get("api/Course");
         setCourses(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }

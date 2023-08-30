@@ -1,3 +1,6 @@
+* {
+  font-family: "Montserrat", sans-serif;
+}
 body {
   overflow-x: hidden;
   font-family: "Roboto", sans-serif;
@@ -53,7 +56,7 @@ a:hover {
 .form {
   .form-container {
     width: 100%;
-    height: 98vh;
+
     margin-top: 1%;
     margin-bottom: 1%;
     padding: 15px; /* Adjust the padding */
@@ -185,14 +188,11 @@ a:hover {
 }
 
 .button-list {
-  position: absolute;
   bottom: 0;
   left: 0;
   margin: 10px;
 }
 
-.table-container {
-  position: relative;
-  width: 100%;
-  height: 300px;
+.container-fluid {
+  margin-left: 0;
 }

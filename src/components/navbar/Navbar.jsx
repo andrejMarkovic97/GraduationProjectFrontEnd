@@ -6,7 +6,6 @@ import styles from "./Navbar.module.css";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
 function Navigation({ user, setUser }) {
-  console.log(user);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -26,7 +25,7 @@ function Navigation({ user, setUser }) {
             <Nav.Link
               as={Link}
               className={styles["nav-link"]}
-              to={`/course/${null}`}
+              to={`/course/details`}
             >
               Create Course
             </Nav.Link>
