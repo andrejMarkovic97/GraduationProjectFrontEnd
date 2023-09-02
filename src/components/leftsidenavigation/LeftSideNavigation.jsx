@@ -11,9 +11,7 @@ import {
 import { NavLink, useParams } from "react-router-dom";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-export default function LeftSideNavigation({ sections, content, main }) {
-  const { id } = useParams();
-
+export default function LeftSideNavigation({ sections, content, main, id }) {
   const currentPath = window.location.pathname;
   return (
     <>

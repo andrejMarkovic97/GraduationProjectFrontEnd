@@ -17,7 +17,7 @@ function Navigation({ user, setUser }) {
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="#home" className={styles["navbar-brand"]}>
-          React-Bootstrap
+          Graduation
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -35,13 +35,6 @@ function Navigation({ user, setUser }) {
               to="/course/list"
             >
               Courses
-            </Nav.Link>
-            <Nav.Link
-              as={Link}
-              className={styles["nav-link"]}
-              to="/sessions/list"
-            >
-              Sessions
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

@@ -1,33 +1,17 @@
 import { useEffect, useState } from "react";
 import api from "../../api";
 import DeleteModal from "../modal/DeleteModal";
-
 export default function Table({
   id,
-  endpoint,
   headers,
   rows,
   handleCreateFunction,
   handleRowClick,
   handleDeleteFunction,
+  data,
 }) {
-  const [list, setList] = useState(null);
-
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-
-  useEffect(() => {
-    const fetchList = async () => {
-      try {
-        const response = await api.get(`api${endpoint}`);
-        setList(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchList();
-  }, [endpoint]);
 
   const handleShowModal = (id) => {
     setSelectedId(id);
@@ -37,13 +21,15 @@ export default function Table({
   return (
     <div className="table-container">
       {isOpen && (
-        <DeleteModal
-          id={selectedId}
-          handleDeleteFunction={handleDeleteFunction}
-          setIsOpen={setIsOpen}
-        />
+        <div className="overlay">
+          <DeleteModal
+            id={selectedId}
+            handleDeleteFunction={handleDeleteFunction}
+            setIsOpen={setIsOpen}
+          />
+        </div>
       )}
-      {list ? (
+      {data ? (
         <div>
           <table className="table bg-white table-hover table-responsive-sm">
             <thead className="bg-light">
@@ -58,7 +44,7 @@ export default function Table({
               </tr>
             </thead>
             <tbody>
-              {list.map((item, itemIndex) => (
+              {data.map((item, itemIndex) => (
                 //item[rows[0]] is the id of the list item
                 <tr
                   key={itemIndex}

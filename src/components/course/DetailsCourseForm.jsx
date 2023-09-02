@@ -27,7 +27,7 @@ export default function DetailsCourseForm() {
       }
     };
     fetchCategories();
-  }, []); // Remove categories from the dependency array
+  }, []);
 
   useEffect(() => {
     const fetchCourseData = async (id) => {
@@ -52,35 +52,15 @@ export default function DetailsCourseForm() {
     }
   }, [id]);
 
-  // Separate useEffect to set the selected category
-  useEffect(() => {
-    if (categories && selectedCategory && selectedTopic) {
-      // No need to find the category again, you already have it from the course data
-      const category = categories.find(
-        (c) => c.categoryId === selectedCategory
-      );
-      if (category) {
-        const topic = category.topics.find((t) => t.topicId === selectedTopic);
-        if (topic) {
-          console.log(topic);
-          setSelectedCategory(category);
-          setSelectedTopic(topic);
-        }
-      }
-    } else if (categories && categories.length > 0) {
-      const initialCategory = categories[0];
-      setSelectedCategory(initialCategory);
-      if (initialCategory.topics && initialCategory.topics.length > 0) {
-        setSelectedTopic(initialCategory.topics[0].topicId);
-      }
-    }
-  }, [categories, selectedCategory, selectedTopic]);
-
   const handleSelectCategory = (id) => {
-    const category = categories.find((c) => c.categoryId == id);
-    setSelectedCategory(category);
+    setSelectedCategory(id);
   };
 
+  const findSelectedCategoryObject = (id) => {
+    if (categories) {
+      return categories.find((category) => category.categoryId == id);
+    }
+  };
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file);
@@ -93,17 +73,26 @@ export default function DetailsCourseForm() {
     formData.append("Name", name);
     formData.append("Description", description);
     formData.append("NumberOfSessionsForCertificate", numberOfSessions);
-    formData.append("CategoryId", selectedCategory.categoryId);
+    formData.append("CategoryId", selectedCategory);
     formData.append("TopicId", selectedTopic);
     formData.append("Image", image);
+    if (id) {
+      formData.append("CourseId", id);
+    }
 
     try {
-      const response = await api.post("/api/Course", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      navigate(`/courses/list`);
+      id
+        ? await api.put(`/api/Course`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+        : await api.post("/api/Course", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+      navigate(`/course/list`);
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);
@@ -177,11 +166,7 @@ export default function DetailsCourseForm() {
                   <Form.Label className="form-label">Category</Form.Label>
                   <Form.Select
                     aria-label="Category list"
-                    value={
-                      selectedCategory
-                        ? selectedCategory.categoryId
-                        : categories[0].categoryId
-                    }
+                    value={selectedCategory}
                     onChange={(e) => handleSelectCategory(e.target.value)}
                   >
                     {categories?.map((category) => (
@@ -195,27 +180,27 @@ export default function DetailsCourseForm() {
                   </Form.Select>
                 </Form.Group>
 
-                <Form.Group
-                  controlId="detailsCourseForm.TopicDropdown"
-                  className="mb-3"
-                >
-                  <Form.Label>Topic</Form.Label>
-                  <Form.Select
-                    aria-label="Topic list"
-                    value={
-                      selectedTopic
-                        ? selectedTopic.topicId
-                        : categories[0].topics[0]
-                    }
-                    onChange={(e) => setSelectedTopic(e.target.value)}
+                {categories && selectedCategory && (
+                  <Form.Group
+                    controlId="detailsCourseForm.TopicDropdown"
+                    className="mb-3"
                   >
-                    {selectedCategory?.topics?.map((topic) => (
-                      <option key={topic.topicId} value={topic.topicId}>
-                        {topic.topicName}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                    <Form.Label>Topic</Form.Label>
+                    <Form.Select
+                      aria-label="Topic list"
+                      value={selectedTopic}
+                      onChange={(e) => setSelectedTopic(e.target.value)}
+                    >
+                      {findSelectedCategoryObject(selectedCategory).topics?.map(
+                        (topic) => (
+                          <option key={topic.topicId} value={topic.topicId}>
+                            {topic.topicName}
+                          </option>
+                        )
+                      )}
+                    </Form.Select>
+                  </Form.Group>
+                )}
               </>
             )}
 

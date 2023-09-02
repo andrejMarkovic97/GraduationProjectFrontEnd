@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import api from "../../api";
 import Table from "../table/Table";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MultiSelectUserModal from "../modal/MultiSelectUserModal";
 
 export default function CourseAttendances() {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
+  const [tableData, setTableData] = useState(null);
 
   const { id } = useParams();
 
@@ -14,18 +14,33 @@ export default function CourseAttendances() {
     setIsOpen(true);
   };
 
-  const handleRowClick = (sessionId) => {
+  const handleRowClick = (userId) => {
     // user details modal
   };
 
   const handleDeleteFunction = async (userId) => {
     try {
       await api.delete(`/api/CourseAttendance/${id}/${userId}`);
-      navigate(`/course/attendances/${id}`);
+      fetchTableData();
     } catch (error) {
       console.log(error);
     }
   };
+
+  const fetchTableData = useCallback(async () => {
+    try {
+      const response = await api.get(
+        `api/CourseAttendance/GetCourseAttendances/${id}`
+      );
+      setTableData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchTableData();
+  }, [id, fetchTableData]);
 
   const mapToCourseAttendanceDto = (user, courseId) => {
     return {
@@ -33,6 +48,7 @@ export default function CourseAttendances() {
       CourseId: courseId, // Assuming CourseId is of type Guid
     };
   };
+
   const handleSubmit = async (users) => {
     try {
       const courseAttendanceDtos = users.map((user) =>
@@ -42,7 +58,7 @@ export default function CourseAttendances() {
         `/api/CourseAttendance/AddCourseAttendances`,
         courseAttendanceDtos
       );
-      navigate(`/course/attendances/${id}`);
+      fetchTableData();
     } catch (error) {
       console.error(error);
     }
@@ -61,13 +77,11 @@ export default function CourseAttendances() {
 
   const rows = ["userId", ...headers.map((header) => header.key)];
 
-  const endpoint = `/CourseAttendance/GetCourseAttendances/${id}`;
-
   return (
     <>
       <Table
         id={id}
-        endpoint={endpoint}
+        data={tableData}
         headers={headers}
         rows={rows}
         handleCreateFunction={handleCreateFunction}
@@ -75,11 +89,13 @@ export default function CourseAttendances() {
         handleDeleteFunction={handleDeleteFunction}
       />
       {isOpen && (
-        <MultiSelectUserModal
-          requestEndpoint={`api/Course/GetUsersNotAttendingCourse/${id}`}
-          setIsOpen={setIsOpen}
-          handleSubmit={handleSubmit}
-        />
+        <div className="overlay">
+          <MultiSelectUserModal
+            requestEndpoint={`api/Course/GetUsersNotAttendingCourse/${id}`}
+            setIsOpen={setIsOpen}
+            handleSubmit={handleSubmit}
+          />
+        </div>
       )}
     </>
   );

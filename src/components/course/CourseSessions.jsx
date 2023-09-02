@@ -2,11 +2,27 @@ import { useEffect, useState } from "react";
 import api from "../../api";
 import Table from "../table/Table";
 import { useNavigate, useParams } from "react-router-dom";
+import { useCallback } from "react";
 
 export default function CourseSessions() {
+  const [tableData, setTableData] = useState(null);
   const navigate = useNavigate();
 
   const { id } = useParams();
+
+  const fetchTableData = useCallback(async () => {
+    try {
+      const response = await api.get(`/api/Session/GetCourseSessions/${id}`);
+      setTableData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchTableData();
+  }, [id, fetchTableData]);
+
   const handleCreateFunction = () => {
     navigate(`/session/details/${id}`);
   };
@@ -18,6 +34,7 @@ export default function CourseSessions() {
   const handleDeleteFunction = async (sessionId) => {
     try {
       await api.delete(`/api/Session/${sessionId}`);
+      fetchTableData();
     } catch (error) {
       console.log(error);
     }
@@ -33,12 +50,10 @@ export default function CourseSessions() {
 
   const rows = ["sessionId", ...headers.map((header) => header.key)];
 
-  const endpoint = `/Session/GetCourseSessions/${id}`;
-
   return (
     <Table
       id={id}
-      endpoint={endpoint}
+      data={tableData}
       headers={headers}
       rows={rows}
       handleCreateFunction={handleCreateFunction}
