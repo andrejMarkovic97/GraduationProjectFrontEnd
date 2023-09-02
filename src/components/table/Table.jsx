@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../api";
 import DeleteModal from "../modal/DeleteModal";
+import SearchBar from "../search-bar/SearchBar";
 export default function Table({
   id,
   headers,
@@ -12,6 +13,7 @@ export default function Table({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
 
   const handleShowModal = (id) => {
     setSelectedId(id);
@@ -30,7 +32,8 @@ export default function Table({
         </div>
       )}
       {data ? (
-        <div>
+        <>
+          <SearchBar data={data} setFilteredData={setFilteredData} />
           <table className="table bg-white table-hover table-responsive-sm">
             <thead className="bg-light">
               <tr>
@@ -44,7 +47,7 @@ export default function Table({
               </tr>
             </thead>
             <tbody>
-              {data.map((item, itemIndex) => (
+              {filteredData.map((item, itemIndex) => (
                 //item[rows[0]] is the id of the list item
                 <tr
                   key={itemIndex}
@@ -68,7 +71,7 @@ export default function Table({
               ))}
             </tbody>
           </table>
-        </div>
+        </>
       ) : (
         <h1>No Data available</h1>
       )}

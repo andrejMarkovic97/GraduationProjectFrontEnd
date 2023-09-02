@@ -204,10 +204,9 @@ export default function DetailsCourseForm() {
               </>
             )}
 
-            <Button variant="primary" type="submit">
+            <Button variant="primary " type="submit">
               Submit
             </Button>
-            {id && <Button variant="danger">Delete</Button>}
           </Form>
         </div>
       </div>

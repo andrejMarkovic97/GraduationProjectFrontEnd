@@ -13,7 +13,7 @@ export default function CourseCard({ course, handleShowModal }) {
 
   return (
     <>
-      <Card className="mb-4">
+      <Card className="mb-4 mt-2">
         <Card.Img
           variant="top"
           src={`${baseApiUrl}${course.imagePath}`}
@@ -35,7 +35,7 @@ export default function CourseCard({ course, handleShowModal }) {
           </ButtonGroup>
         </Card.Body>
         <Card.Footer>
-          <small className="text-muted">Last updated 3 mins ago</small>
+          <small className="text-muted">{course.description}</small>
         </Card.Footer>
       </Card>
     </>
