@@ -22,13 +22,15 @@ function Navigation({ user, setUser }) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link
-              as={Link}
-              className={styles["nav-link"]}
-              to={`/course/details`}
-            >
-              Create Course
-            </Nav.Link>
+            {user.role.roleName === "Instructor" && (
+              <Nav.Link
+                as={Link}
+                className={styles["nav-link"]}
+                to={`/course/details`}
+              >
+                Create Course
+              </Nav.Link>
+            )}
             <Nav.Link
               as={Link}
               className={styles["nav-link"]}
@@ -43,8 +45,6 @@ function Navigation({ user, setUser }) {
           title={`${user.firstName} ${user.lastName}`}
           id="basic-nav-dropdown"
         >
-          <NavDropdown.Item href="#action/3.1">Edit Profile</NavDropdown.Item>
-          <NavDropdown.Divider />
           <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
         </NavDropdown>
       </Container>

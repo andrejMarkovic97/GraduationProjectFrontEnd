@@ -3,7 +3,7 @@ import api, { baseApiUrl } from "../../api";
 import { Col, Container, Row } from "react-bootstrap";
 import CourseCard from "./CourseCard";
 import DeleteModal from "../modal/DeleteModal";
-export default function CourseList() {
+export default function CourseList({ user }) {
   const [courses, setCourses] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
@@ -46,6 +46,7 @@ export default function CourseList() {
                   <CourseCard
                     course={course}
                     handleShowModal={handleShowModal}
+                    user={user}
                   />
                 }
               </Col>

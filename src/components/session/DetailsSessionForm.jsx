@@ -61,7 +61,7 @@ export default function DetailsSessionForm() {
 
       console.log(response);
       console.log(sessionDto);
-      navigate(`/courses/sessions/${courseId}`);
+      navigate(`/course/sessions/${courseId}`);
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);
@@ -143,7 +143,6 @@ export default function DetailsSessionForm() {
             <Button variant="primary" type="submit">
               Submit
             </Button>
-            {courseId && <Button variant="danger">Delete</Button>}
           </Form>
         </div>
       </div>

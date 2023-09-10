@@ -37,6 +37,7 @@ function App() {
         })
         .then((response) => {
           setUser(response.data);
+          console.log(response.data);
         })
         .catch((error) => {
           console.error("Error fetching user:", error);
@@ -60,7 +61,10 @@ function App() {
             <Navbar user={user} setUser={setUser} />
             <Routes>
               <>
-                <Route path="/course/list" element={<CourseList />} />
+                <Route
+                  path="/course/list"
+                  element={<CourseList user={user} />}
+                />
                 <Route
                   path="/course/details/:id?"
                   element={
